@@ -62,7 +62,6 @@ def rnd3Vel():
 def rnd4Vec(minVal, maxVal):
     # generate a random 4-vector with entries in (minVal, maxVal)
     vec = (maxVal - minVal)*rand.random(4) + minVal
-    # vec /= mod(vec) / rand.random()
     return vec
 
 # ---
@@ -70,9 +69,15 @@ def rnd4Vec(minVal, maxVal):
 def lorTransf(v):
     # generate a Lorentz boost matrix with velocity given by v
     B = [ [ g(v), - g(v) * v[0], - g(v) * v[1], - g(v) * v[2] ],
-          [ - g(v) * v[0], 1 + (g(v) - 1) * (v[0]  / mod(v)) ** 2, (g(v) - 1) * (v[0] * v[1]  / mod(v) ** 2), (g(v) - 1) * (v[0] * v[2]  / mod(v) ** 2) ],
-          [ - g(v) * v[1], (g(v) - 1) * (v[1] * v[0]  / mod(v) ** 2), 1 + (g(v) - 1) * (v[1]  / mod(v)) ** 2, (g(v) - 1) * (v[1] * v[2]  / mod(v) ** 2) ],
-          [ - g(v) * v[2], (g(v) - 1) * (v[2] * v[0]  / mod(v) ** 2), (g(v) - 1) * (v[2] * v[1]  / mod(v) ** 2), 1 + (g(v) - 1) * (v[2]  / mod(v)) ** 2 ] ]
+          [ - g(v) * v[0], 1 + (g(v) - 1) * (v[0]  / mod(v)) ** 2, \
+           (g(v) - 1) * (v[0] * v[1]  / mod(v) ** 2), \
+           (g(v) - 1) * (v[0] * v[2]  / mod(v) ** 2) ],
+          [ - g(v) * v[1], (g(v) - 1) * (v[1] * v[0]  / mod(v) ** 2), \
+           1 + (g(v) - 1) * (v[1]  / mod(v)) ** 2, \
+           (g(v) - 1) * (v[1] * v[2]  / mod(v) ** 2) ],
+          [ - g(v) * v[2], (g(v) - 1) * (v[2] * v[0]  / mod(v) ** 2), \
+           (g(v) - 1) * (v[2] * v[1]  / mod(v) ** 2), \
+           1 + (g(v) - 1) * (v[2]  / mod(v)) ** 2 ] ]
     return B
 
 # ---
@@ -116,7 +121,9 @@ class boost:
 # actual code
 # =============================================================================
 
-print('=============================================================================\nOUTPUT\n=============================================================================')
+print('======================================================================')
+print('OUTPUT')
+print('======================================================================')
 
 # generate two random vectors and one fixed
 
@@ -232,4 +239,6 @@ print('C u C v - u v = {:2.3f}'.format(CuCv - uv))
 print('C u C w - u w = {:2.3f}'.format(CuCw - uw))
 print('C v C w - v w = {:2.3f}'.format(CvCw - vw))
 
-print('=============================================================================\nEND OF OUTPUT\n=============================================================================')
+print('======================================================================')
+print('END OF OUTPUT')
+print('======================================================================')

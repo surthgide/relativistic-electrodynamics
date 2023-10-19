@@ -314,7 +314,7 @@ linktocpage = true
 
 %
 
-\section{Esercizio 1}
+\section*{Esercizio 1}
 
 Riscriviamo la definizione della rapidità
 
@@ -449,7 +449,7 @@ A questo punto sostituiamo nella definizione della rapidità
 
 % ==============================================================================
 
-\section{Esercizio 2}
+\section*{Esercizio 2}
 
 Riscriviamo la formula per la sezione d'urto nel seguente modo
 
@@ -494,7 +494,7 @@ A questo punto, sostituendo le quantità calcolate nel sistema di riferimento so
 
 % ==============================================================================
 
-\section{Esercizio 3}
+\section*{Esercizio 3}
 
 \subsection*{Equazione del moto}
 
@@ -668,7 +668,10 @@ il quale espresso in minuti e secondi risulta
 
 % ==============================================================================
 
-\section{Esercizio 4}
+\section*{Esercizio 4}
+
+Il linguaggio scelto per questo esercizio è Python. \\
+Importiamo \lstinline|numpy| per la radice quadrata, il prodotto matriciale, il generatore di numeri casuali e le matrici diagonali. Tramite quest'ultima, definiamo il tensore metrico \lstinline|eta|.
 
 \begin{lstlisting}[language=Python]
 		# packages import
@@ -683,5 +686,537 @@ il quale espresso in minuti e secondi risulta
 		
 		eta = np.diag([1, -1, -1, -1])
 \end{lstlisting}
+
+Di seguito la definizione delle funzioni che saranno utili nella definizione delle classi e nel codice stesso. Nello specifico:
+
+\begin{description}
+	\item[dot] prodotto matriciale
+	
+	\item[mod] modulo di un 3-vettore
+	
+	\item[dotLor] prodotto di due vettori (entrambi covarianti o controvarianti), intramezzato dal tensore metrico per abbassare/sollevare uno degli indici
+	
+	\item[g] fattore di Lorentz
+	
+	\item[rnd3Vel] generatore di un 3-vettore con entrate casuali, normalizzato in unità di $c$, velocità della luce
+	
+	\item[rnd4Vec] generatore di un 4-vettore con entrate casuali nell'intervallo $(-10,10)$
+	
+	\item[lorTransf] generatore di una boost di Lorentz in nella direzione della velocità inserita come argomento
+	
+	\item[printMatrix] funzione per stampare nel terminale le matrici in modo più leggibile
+\end{description}
+
+\begin{lstlisting}[language=Python]
+	def dot(m1,m2):
+		# dot product
+		return np.dot(m1,m2)
+	
+	# ---
+	
+	def mod(vec):
+		# module of a 3-vector
+		return np.sqrt(sum(x ** 2 for x in vec))
+	
+	# ---
+	
+	def dotLor(vec1, vec2):
+		# squared module of a 4-vector
+		return dot(dot(vec1, eta), vec2)
+	
+	# ---
+	
+	def g(v):
+		# gamma factor for the velocity v
+		return 1 / np.sqrt(1 - mod(v) ** 2)
+	
+	# ---
+	
+	def rnd3Vel():
+		# generate a random 3-velocity (c = 1)
+		vel = 20*rand.random(3) - 10
+		vel /= mod(vel) / rand.random()
+		return vel
+	
+	# ---
+	
+	def rnd4Vec(minVal, maxVal):
+		# generate a random 4-vector with entries in (minVal, maxVal)
+		vec = (maxVal - minVal)*rand.random(4) + minVal
+		return vec
+	
+	# ---
+	
+	def lorTransf(v):
+	# generate a Lorentz boost matrix with velocity given by v
+		B = [ [ g(v), - g(v) * v[0], - g(v) * v[1], - g(v) * v[2] ],
+		[ - g(v) * v[0], 1 + (g(v) - 1) * (v[0]  / mod(v)) ** 2, \
+		(g(v) - 1) * (v[0] * v[1]  / mod(v) ** 2), \
+		(g(v) - 1) * (v[0] * v[2]  / mod(v) ** 2) ],
+		[ - g(v) * v[1], (g(v) - 1) * (v[1] * v[0]  / mod(v) ** 2), \
+		1 + (g(v) - 1) * (v[1]  / mod(v)) ** 2, \
+		(g(v) - 1) * (v[1] * v[2]  / mod(v) ** 2) ],
+		[ - g(v) * v[2], (g(v) - 1) * (v[2] * v[0]  / mod(v) ** 2), \
+		(g(v) - 1) * (v[2] * v[1]  / mod(v) ** 2), \
+		1 + (g(v) - 1) * (v[2]  / mod(v)) ** 2 ] ]
+		return B
+	
+	# ---
+	
+	def printMatrix(matrix):
+		for lst in matrix:
+			for element in lst:
+				print("{:10.6f}".format(element), end="\t")
+			print("")
+\end{lstlisting}
+
+A questo punto, definiamo le due classi che ci serviranno per la soluzione: un vettore di Lorentz e un boost di Lorentz. Entrambi vengono generati casualmente se non viene dato loro come argomento un 4-vettore o una 3-velocità rispettivamente, seguito dal comando \lstinline|rnd=False|.
+
+\begin{description}
+	\item[lorVec] un vettore di Lorentz con entrate modificabili, modulo e tipo (luce, tempo, spazio)
+	
+	\item[boost] un boost di Lorentz con entrate modificabili e velocità su cui è calcolato il boost disponibile
+\end{description}
+
+\begin{lstlisting}[language=Python]
+	class lorVec:
+	
+		'''Lorentz vector with entries, module, and squared module'''
+		
+		def __init__(self, *vec, **check):
+			self.vec = rnd4Vec(-10, 10) if check.get('rnd', True) else list(*vec)
+			self.mod = dotLor(self.vec, self.vec)
+		
+			if self.mod == 0:
+				self.vecType = 'light'
+			elif self.mod > 0:
+				self.vecType = 'time'
+			else:
+				self.vecType = 'space'
+	
+	# ---
+	
+	class boost:
+	
+		'''Lorentz boost, with matrix and versor'''
+		
+		def __init__(self, *vel, **check):
+			self.vel = rnd3Vel() if check.get('rnd', True) else list(*vel)
+			self.boostMatrix = lorTransf(self.vel)
+\end{lstlisting}
+
+Nella parte principale del codice generiamo tre vettori (due casuali e uno fisso)
+
+\begin{lstlisting}[language=Python]
+	u = lorVec()
+	v = lorVec()
+	
+	vec = [1,1,1,0]
+	w = lorVec(vec, rnd=False)
+\end{lstlisting}
+
+Ne calcoliamo il prodotto scalare
+
+\begin{lstlisting}[language=Python]
+	uv = dotLor(u.vec, v.vec)
+	uw = dotLor(u.vec, w.vec)
+	vw = dotLor(v.vec, w.vec)
+\end{lstlisting}
+
+Generiamo due boost (uno casuale e uno fisso generato da una velocità sull'asse $z$)
+
+\begin{lstlisting}[language=Python]
+	B = boost()
+	
+	vel = [0, 0, 0.9]
+	C = boost(vel, rnd=False)
+\end{lstlisting}
+
+Facciamo agire i boost sui vettori definiti in precedenza
+
+\begin{lstlisting}[language=Python]
+	Bu = dot(B.boostMatrix, u.vec)
+	Bv = dot(B.boostMatrix, v.vec)
+	Bw = dot(B.boostMatrix, w.vec)
+	
+	Cu = dot(C.boostMatrix, u.vec)
+	Cv = dot(C.boostMatrix, v.vec)
+	Cw = dot(C.boostMatrix, w.vec)
+\end{lstlisting}
+
+e calcoliamo i prodotti dei vettori in seguito ai boost
+
+\begin{lstlisting}[language=Python]
+	BuBv = dotLor(Bu, Bv)
+	BuBw = dotLor(Bu, Bw)
+	BvBw = dotLor(Bv, Bw)
+	
+	CuCv = dotLor(Cu, Cv)
+	CuCw = dotLor(Cu, Cw)
+	CvCw = dotLor(Cv, Cw)
+\end{lstlisting}
+
+A questo punto possiamo calcolare semplicemente le differenze tra i prodotti scalari prima e dopo i boost:
+
+\begin{verbatim}
+	VECTORS DECLARATIONS
+	
+	random vector u:
+	
+	u =  [-6.11635617 -8.01803261  3.43250309  6.35179459] 
+	module =  -79.00640609375716 
+	type =  space
+	
+	random vector v:
+	
+	v =  [ 8.8227775  -4.49636568  6.24238156  8.14558065] 
+	module =  -47.6937131194255 
+	type =  space
+	
+	fixed vector w:
+	
+	w =  [1, 1, 1, 0] 
+	module =  -1 
+	type =  space
+	
+	INNER PRODUCTS BETWEEN VECTORS
+	
+	u v =  -163.18130540548972
+	u w =  -1.530826658809973
+	v w =  7.076761622107156
+	
+	RANDOM AND FIXED BOOST DECLARATIONS
+	
+	random boost B:
+	
+	boost velocity =  [ 0.13380972 -0.14730109  0.26939327] 
+	boost velocity module =  0.33492594285180055
+	boost matrix =
+	1.061296	 -0.142012	  0.156330	 -0.285906	
+	-0.142012	  1.009784	 -0.010770	  0.019697	
+	0.156330	 -0.010770	  1.011856	 -0.021683	
+	-0.285906	  0.019697	 -0.021683	  1.039656	
+	
+	fixed boost C:
+	
+	boost velocity =  [0, 0, 0.9] 
+	boost velocity module =  0.9
+	boost matrix =
+	2.294157	 -0.000000	 -0.000000	 -2.064742	
+	-0.000000	  1.000000	  0.000000	  0.000000	
+	-0.000000	  0.000000	  1.000000	  0.000000	
+	-2.064742	  0.000000	  0.000000	  2.294157	
+	
+	BOOSTING VECTORS
+	
+	boost via B:
+	
+	B u =  [-6.63202075 -7.13974113  2.46565788  8.12002052]
+	B v =  [ 8.64911418 -5.70008076  7.56746121  5.72219358]
+	B w =  [ 1.07561404  0.85700186  1.15741592 -0.28789191]
+	
+	boost via C:
+	
+	C u =  [-27.14669796  -8.01803261   3.43250309  27.20071123]
+	C v =  [ 3.42232049 -4.49636568  6.24238156  0.47048784]
+	C w =  [ 2.29415734  1.          1.         -2.0647416 ]
+	
+	INNER PRODUCTS BETWEEN BOOSTED VECTORS
+	
+	B u B v =  -163.18130540548972
+	B u B w =  -1.5308266588099717
+	B v B w =  7.076761622107155
+	
+	C u C v =  -163.1813054054897
+	C u C w =  -1.5308266588099713
+	C v C w =  7.0767616221071545
+	
+	COMPARISON BETWEEN INNER PRODUCTS BEFORE AND AFTER BOOST
+	
+	B u B v - u v = 0.000
+	B u B w - u w = 0.000
+	B v B w - v w = -0.000
+	
+	C u C v - u v = 0.000
+	C u C w - u w = 0.000
+	C v C w - v w = -0.000
+\end{verbatim}
+
+Queste risultano tutte nulle come ci si aspetta in quanto il prodotto scalare è un invariante di Lorentz.
+
+% ==============================================================================
+
+\section*{Codice completo}
+
+\begin{verbatim}
+	# =============================================================================
+	# EXERCISE 1-4
+	# =============================================================================
+	
+	# the following exercise uses the convention:
+	# c = 1
+	
+	# =============================================================================
+	# packages import
+	# =============================================================================
+	
+	import numpy as np
+	
+	# =============================================================================
+	# constants definition
+	# =============================================================================
+	
+	# true random generator
+	
+	rand = np.random.default_rng()
+	
+	# metric tensor
+	
+	eta = np.diag([1, -1, -1, -1])
+	
+	# =============================================================================
+	# functions definition
+	# =============================================================================
+	
+	def dot(m1,m2):
+	# dot product
+	return np.dot(m1,m2)
+	
+	# ---
+	
+	def mod(vec):
+	# module of a 3-vector
+	return np.sqrt(sum(x ** 2 for x in vec))
+	
+	# ---
+	
+	def dotLor(vec1, vec2):
+	# squared module of a 4-vector
+	return dot(dot(vec1, eta), vec2)
+	
+	# ---
+	
+	def g(v):
+	# gamma factor for the velocity v
+	return 1 / np.sqrt(1 - mod(v) ** 2)
+	
+	# ---
+	
+	def rnd3Vel():
+	# generate a random 3-velocity (c = 1)
+	vel = 20*rand.random(3) - 10
+	vel /= mod(vel) / rand.random()
+	return vel
+	
+	# ---
+	
+	def rnd4Vec(minVal, maxVal):
+	# generate a random 4-vector with entries in (minVal, maxVal)
+	vec = (maxVal - minVal)*rand.random(4) + minVal
+	return vec
+	
+	# ---
+	
+	def lorTransf(v):
+	# generate a Lorentz boost matrix with velocity given by v
+	B = [ [ g(v), - g(v) * v[0], - g(v) * v[1], - g(v) * v[2] ],
+	[ - g(v) * v[0], 1 + (g(v) - 1) * (v[0]  / mod(v)) ** 2, \
+	(g(v) - 1) * (v[0] * v[1]  / mod(v) ** 2), \
+	(g(v) - 1) * (v[0] * v[2]  / mod(v) ** 2) ],
+	[ - g(v) * v[1], (g(v) - 1) * (v[1] * v[0]  / mod(v) ** 2), \
+	1 + (g(v) - 1) * (v[1]  / mod(v)) ** 2, \
+	(g(v) - 1) * (v[1] * v[2]  / mod(v) ** 2) ],
+	[ - g(v) * v[2], (g(v) - 1) * (v[2] * v[0]  / mod(v) ** 2), \
+	(g(v) - 1) * (v[2] * v[1]  / mod(v) ** 2), \
+	1 + (g(v) - 1) * (v[2]  / mod(v)) ** 2 ] ]
+	return B
+	
+	# ---
+	
+	def printMatrix(matrix):
+	for lst in matrix:
+	for element in lst:
+	print("{:10.6f}".format(element), end="\t")
+	print("")
+	
+	# =============================================================================
+	# classes definition
+	# =============================================================================
+	
+	class lorVec:
+	
+	'''Lorentz vector with entries, module, and squared module'''
+	
+	def __init__(self, *vec, **check):
+	self.vec = rnd4Vec(-10, 10) if check.get('rnd', True) else list(*vec)
+	self.mod = dotLor(self.vec, self.vec)
+	
+	if self.mod == 0:
+	self.vecType = 'light'
+	elif self.mod > 0:
+	self.vecType = 'time'
+	else:
+	self.vecType = 'space'
+	
+	# ---
+	
+	class boost:
+	
+	'''Lorentz boost, with matrix and versor'''
+	
+	def __init__(self, *vel, **check):
+	self.vel = rnd3Vel() if check.get('rnd', True) else list(*vel)
+	self.boostMatrix = lorTransf(self.vel)
+	
+	# =============================================================================
+	# actual code
+	# =============================================================================
+	
+	print('======================================================================')
+	print('OUTPUT')
+	print('======================================================================')
+	
+	# generate two random vectors and one fixed
+	
+	print('VECTORS DECLARATIONS\n')
+	
+	print('random vector u:\n')
+	
+	u = lorVec()
+	print('u = ', u.vec, '\nmodule = ', u.mod, '\ntype = ', u.vecType)
+	
+	print('\nrandom vector v:\n')
+	
+	v = lorVec()
+	print('v = ', v.vec, '\nmodule = ', v.mod, '\ntype = ', v.vecType)
+	
+	print('\nfixed vector w:\n')
+	
+	vec = [1,1,1,0]
+	
+	w = lorVec(vec, rnd=False)
+	print('w = ', w.vec, '\nmodule = ', w.mod, '\ntype = ', w.vecType)
+	
+	# inner products between 4-vectors
+	
+	print('\nINNER PRODUCTS BETWEEN VECTORS\n')
+	
+	uv = dotLor(u.vec, v.vec)
+	uw = dotLor(u.vec, w.vec)
+	vw = dotLor(v.vec, w.vec)
+	
+	print('u v = ', uv)
+	print('u w = ', uw)
+	print('v w = ', vw)
+	
+	# boost of v in random direction
+	
+	print('\nRANDOM AND FIXED BOOST DECLARATIONS\n')
+	
+	print('random boost B:\n')
+	
+	B = boost()
+	print('boost velocity = ', B.vel, '\nboost velocity module = ', mod(B.vel))
+	print('boost matrix =')
+	printMatrix(B.boostMatrix)
+	
+	print('\nfixed boost C:\n')
+	
+	vel = [0, 0, 0.9]
+	
+	C = boost(vel, rnd=False)
+	print('boost velocity = ', vel, '\nboost velocity module = ', mod(vel))
+	print('boost matrix =')
+	printMatrix(C.boostMatrix)
+	
+	# boosting vectors
+	
+	print('\nBOOSTING VECTORS\n')
+	
+	print('boost via B:\n')
+	
+	Bu = dot(B.boostMatrix, u.vec)
+	Bv = dot(B.boostMatrix, v.vec)
+	Bw = dot(B.boostMatrix, w.vec)
+	
+	print('B u = ', Bu)
+	print('B v = ', Bv)
+	print('B w = ', Bw)
+	
+	print('\nboost via C:\n')
+	
+	Cu = dot(C.boostMatrix, u.vec)
+	Cv = dot(C.boostMatrix, v.vec)
+	Cw = dot(C.boostMatrix, w.vec)
+	
+	print('C u = ', Cu)
+	print('C v = ', Cv)
+	print('C w = ', Cw)
+	
+	
+	# inner products between boosted 4-vectors
+	
+	print('\nINNER PRODUCTS BETWEEN BOOSTED VECTORS\n')
+	
+	BuBv = dotLor(Bu, Bv)
+	BuBw = dotLor(Bu, Bw)
+	BvBw = dotLor(Bv, Bw)
+	
+	print('B u B v = ', BuBv)
+	print('B u B w = ', BuBw)
+	print('B v B w = ', BvBw)
+	
+	print()
+	
+	CuCv = dotLor(Cu, Cv)
+	CuCw = dotLor(Cu, Cw)
+	CvCw = dotLor(Cv, Cw)
+	
+	print('C u C v = ', CuCv)
+	print('C u C w = ', CuCw)
+	print('C v C w = ', CvCw)
+	
+	# comparison between inner products before and after boost
+	
+	print('\nCOMPARISON BETWEEN INNER PRODUCTS BEFORE AND AFTER BOOST\n')
+	
+	print('B u B v - u v = {:2.3f}'.format(BuBv - uv))
+	print('B u B w - u w = {:2.3f}'.format(BuBw - uw))
+	print('B v B w - v w = {:2.3f}'.format(BvBw - vw))
+	
+	print()
+	
+	print('C u C v - u v = {:2.3f}'.format(CuCv - uv))
+	print('C u C w - u w = {:2.3f}'.format(CuCw - uw))
+	print('C v C w - v w = {:2.3f}'.format(CvCw - vw))
+	
+	print('======================================================================')
+	print('END OF OUTPUT')
+	print('======================================================================')
+	
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
