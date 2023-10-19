@@ -216,26 +216,26 @@
 
 % exercise macro
 
-\newcounter{solutions}
-\setcounter{solutions}{42} % change this number from 42 to whatever to hide solutions
+%\newcounter{solutions}
+%\setcounter{solutions}{42} % change this number from 42 to whatever to hide solutions
 
 % \exer{[title]}{[label]}{[exercise text]}{[solution]}
 
-\newcommand{\exer}[4]{
-	\section{Esercizio #1}\label{#2}
-	
-	\begin{tcolorbox}
-		#3
-	\end{tcolorbox}
-	
-	\ifthenelse{\thesolutions = 42}
-	{#4}
-	{}
-	
-	%
-	
-	\newpage
-}
+%\newcommand{\exer}[4]{
+%	\section{Esercizio #1}\label{#2}
+%	
+%	\begin{tcolorbox}
+%		#3
+%	\end{tcolorbox}
+%	
+%	\ifthenelse{\thesolutions = 42}
+%	{#4}
+%	{}
+%	
+%	%
+%	
+%	\newpage
+%}
 
 %
 
@@ -447,6 +447,8 @@ A questo punto sostituiamo nella definizione della rapidità
 	y'= y + \eta
 \end{equation}
 
+% ==============================================================================
+
 \section{Esercizio 2}
 
 Riscriviamo la formula per la sezione d'urto nel seguente modo
@@ -490,11 +492,53 @@ A questo punto, sostituendo le quantità calcolate nel sistema di riferimento so
 	= \sigma
 \end{equation}
 
+% ==============================================================================
+
 \section{Esercizio 3}
 
 \subsection*{Equazione del moto}
 
-qui
+Consideriamo la seconda legge di Newton
+
+\begin{equation}
+	\va{F} = \dv{\va{p}}{t}
+\end{equation}
+
+dove il momento relativistico è pari a
+
+\begin{equation}
+	\va{p} = m \gamma \va{v}
+\end{equation}
+
+Prendendo solo i moduli dei vettori considerati e ricordando che la forza considerata è costante, integriamo la seconda legge di Newton
+
+\subeq{
+	\int_{0}^{t} \dv{(m \gamma v)}{\xi} \dd{\xi} &= \int_{0}^{t} F \dd{\xi} \\
+	\dfrac{m v}{\sqrt{1 - \dfrac{v^{2}}{c^{2}}}} &= F t \\
+	\dfrac{m^{2} v^{2}}{1 - \dfrac{v^{2}}{c^{2}}} &= F^{2} t^{2} \\
+	\dfrac{m^{2} c^{2}}{c^{2} - v^{2}} \, v^{2} &= F^{2} t^{2} \\
+	\dfrac{m^{2} c^{2}}{F^{2} t^{2}} \, v^{2} &= c^{2} - v^{2} \\
+	\left( \dfrac{m^{2} c^{2}}{F^{2} t^{2}} + 1 \right) v^{2} &= c^{2} \\
+	v &= \dfrac{c}{\sqrt{ 1 + \dfrac{m^{2} c^{2}}{F^{2} t^{2}}} } \\
+	&= \dfrac{c}{\sqrt{\dfrac{F^{2} t^{2} + m^{2} c^{2}}{F^{2} t^{2}}} } \\
+	&= \dfrac{c F t}{\sqrt{ F^{2} t^{2} + m^{2} c^{2} }} \\
+	&= \dfrac{c}{m c} \dfrac{F t}{\sqrt{ 1 + \dfrac{F^{2} t^{2}}{m^{2} c^{2}} }}\\
+	&= \dfrac{F t}{m} \left( 1 + \dfrac{F^{2} t^{2}}{m^{2} c^{2}} \right)^{- 1/2}
+}
+
+Integrando ancora la velocità e ponendo $x(t=0)=0$,
+
+\subeq{
+	\int_{0}^{t} v(\xi) \dd{\xi} &= \dfrac{F}{m} \int_{0}^{t} \xi \left( 1 + \dfrac{F^{2} \xi^{2}}{m^{2} c^{2}} \right)^{- 1/2} \dd{\xi} \\
+	x &= \dfrac{F}{m} \left[ \dfrac{m^{2} c^{2}}{F^{2}} \left( 1 + \dfrac{F^{2} \xi^{2}}{m^{2} c^{2}} \right)^{1/2} \right]_{0}^{t} \\
+	&= \dfrac{m c^{2}}{F} \left( 1 + \dfrac{F^{2} t^{2}}{m^{2} c^{2}} \right)^{1/2} - \dfrac{m c^{2}}{F}
+}
+
+da cui otteniamo l'equazione del moto
+
+\begin{equation}
+	x(t) = \dfrac{m c^{2}}{F} \left( \sqrt{1 + \dfrac{F^{2}}{m^{2} c^{2}} \, t^{2}} - 1 \right)
+\end{equation}
 
 \subsection*{Formula per l'accelerazione}
 
@@ -548,21 +592,96 @@ A questo punto possiamo calcolare l'accelerazione
 
 Essendo la velocità del boost la stessa della velocità di cui abbiamo operato la trasformazione, i.e. $\beta = v/c$, otteniamo
 
-\begin{equation}
+\begin{equation}\label{eq:acc-gamma3}
 	a' = \gamma^{3} a
 \end{equation}
 
 \subsection*{Accelerazione di un protone}
 
-qui
+Integriamo ora l'Equazione \ref{eq:acc-gamma3} nel tempo, considerando costante l'accelerazione $a'$
+
+\subeq{
+	\int_{0}^{t} a' \dd{\xi} &= \int_{0}^{t} \gamma^{3} a \dd{\xi} \\
+	a' t &= \int_{0}^{t} \gamma^{3} \dv{v}{\xi} \dd{\xi} \\
+	&= \int_{0}^{v} \left( 1 - \dfrac{w^{2}}{c^{2}} \right)^{- 3/2} \dd{w} %
+		\Arrow{$w \doteq c \sin(\phi)$ \\ $\dd{w} = c \cos(\theta) \dd{\theta}$} 
+		\\
+	&= \int_{\tau / 2}^{\asin(v/c)} \left( 1 - \sin[2](\theta) \right)^{- 3/2} c \cos(\theta) \dd{\theta} \\
+	&= \int_{\tau / 2}^{\asin(v/c)} \dfrac{\cos(\theta)}{\cos[3](\theta)} \dd{\theta} \\
+	&= c \int_{\tau / 2}^{\asin(v/c)} \dfrac{1}{\cos[2](\theta)} \dd{\theta} \\
+	&= c \left[ \tan(\theta) \right]_{\tau / 2}^{\asin(v/c)} \\
+	&= c \tan(\asin(\dfrac{v}{c})) \\
+	&= v \left( 1 - \dfrac{v^{2}}{c^{2}} \right)^{- 1/2} \\
+	(a' t)^{2} \left( 1 - \dfrac{v^{2}}{c^{2}} \right) &= v^{2} \\
+	v^{2} - (a' t)^{2} \dfrac{v^{2}}{c^{2}} &= (a' t)^{2} \\
+	v &= \dfrac{a' t}{\sqrt{ 1 + \left( \dfrac{a' t}{c} \right)^{2} }}\label{eq:vel-acc}
+}
 
 
+Sostituiamo ora l'Equazione \ref{eq:vel-acc} nella formula per l'energia relativistica, esplicitando il tempo
 
+\subeq{
+	\mathcal{E} &= m \gamma c^{2} \\
+	&= m c^{2} \left( 1 - \dfrac{v^{2}}{c^{2}} \right)^{- 1/2} \\
+	1 - \dfrac{v^{2}}{c^{2}} &= \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} \\
+	v^{2} &= c^{2} \left( 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} \right) \\
+	\dfrac{a'^{2} t^{2}}{ 1 + \dfrac{a'^{2}}{c^{2}} \, t^{2} } &= c^{2} \left( 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} \right) \\
+	\dfrac{a'^{2}}{c^{2}} \, t^{2} &= \left( 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} \right) \left( 1 + \dfrac{a'^{2}}{c^{2}} \, t^{2} \right) \\
+	\cancel{\dfrac{a'^{2}}{c^{2}} \, t^{2}} &= 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} + \cancel{\dfrac{a'^{2}}{c^{2}} \, t^{2}} - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} \dfrac{a'^{2}}{c^{2}} \, t^{2} \\
+	\dfrac{m^{2} c^{2} a'^{2}}{\mathcal{E}^{2}} \, t^{2} &= 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} \\
+	t &= \dfrac{\mathcal{E}}{m c a'} \sqrt{ 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} }
+}
 
+Ricordando che
 
+\begin{gather}
+	F = m \gamma^{3} a = m a' = e E \\
+	\nonumber \\
+	\operatorname{\dfrac{V}{m}} = \operatorname{\dfrac{N}{C}} = 6.2 \cdot 10^{9} \operatorname{\dfrac{GeV}{m}}
+\end{gather}
+
+Sostituendo i dati
+
+\begin{equation}
+	\begin{dcases}
+		\mathcal{E} = 1 \operatorname{TeV} = 10^{3} \operatorname{GeV} \\
+		m = 1 \operatorname{\dfrac{GeV}{c^{2}}} \\
+		E = 1 \operatorname{\dfrac{V}{m}} = 6.2 \cdot 10^{9} \operatorname{\dfrac{GeV}{m}} \\
+		e = 1.6 \cdot 10^{-19} \operatorname{C} \\
+		c = 3 \cdot 10^{8} \operatorname{\dfrac{m}{s}}
+	\end{dcases}
+\end{equation}
+
+otteniamo
+
+\subeq{
+	t &= \dfrac{\mathcal{E}}{m c a'} \sqrt{ 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} } \\
+	&= \dfrac{\mathcal{E}}{e c E} \sqrt{ 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} } \\
+	&= \expl{secondi}{\dfrac{ 10^{3} \operatorname{GeV} }{ (1.6 \cdot 10^{-19} \operatorname{C}) \left( 3 \cdot 10^{8} \operatorname{\dfrac{m}{s}} \right) \left( 6.2 \cdot 10^{9} \operatorname{\dfrac{GeV}{m}} \right) }} \expl{adimensionale}{\sqrt{ 1 - \dfrac{ 1 \operatorname{\dfrac{GeV^{2}}{c^{4}}} c^{4} }{ 10^{6} \operatorname{GeV^{2}} } }}
+}
+
+il quale espresso in minuti e secondi risulta
+
+\begin{equation}
+	t \simeq 55 \operatorname{m} 35 \operatorname{s} 
+\end{equation}
+
+% ==============================================================================
 
 \section{Esercizio 4}
 
-i
+\begin{lstlisting}[language=Python]
+		# packages import
+		
+		import numpy as np
+		
+		# true random generator
+		
+		rand = np.random.default_rng()
+		
+		# metric tensor
+		
+		eta = np.diag([1, -1, -1, -1])
+\end{lstlisting}
 
 \end{document}

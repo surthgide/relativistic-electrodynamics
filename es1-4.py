@@ -12,35 +12,6 @@
 import numpy as np
 
 # =============================================================================
-# classes definition
-# =============================================================================
-
-class lorVec:
-    
-    '''Lorentz vector with entries, module, and squared module'''
-
-    def __init__(self, *vec, **check):
-        self.vec = rnd4Vec(-10, 10) if check.get('rnd', True) else list(*vec)
-        self.mod = dotLor(self.vec, self.vec)
-        
-        if self.mod == 0:
-            self.vecType = 'light'
-        elif self.mod > 0:
-            self.vecType = 'time'
-        else:
-            self.vecType = 'space'
-    
-# ---
-
-class boost:
-    
-    '''Lorentz boost, with matrix and versor'''
-    
-    def __init__(self, *vel, **check):
-        self.vel = rnd3Vel() if check.get('rnd', True) else list(*vel)
-        self.boostMatrix = lorTransf(self.vel)
-
-# =============================================================================
 # constants definition
 # =============================================================================
 
@@ -113,13 +84,37 @@ def printMatrix(matrix):
         print("")
 
 # =============================================================================
-# actual code
+# classes definition
 # =============================================================================
 
-# # clear screen for new output
+class lorVec:
+    
+    '''Lorentz vector with entries, module, and squared module'''
 
-# os.system('cls' if os.name == 'nt' else 'clear')
-# time.sleep(0.1)
+    def __init__(self, *vec, **check):
+        self.vec = rnd4Vec(-10, 10) if check.get('rnd', True) else list(*vec)
+        self.mod = dotLor(self.vec, self.vec)
+        
+        if self.mod == 0:
+            self.vecType = 'light'
+        elif self.mod > 0:
+            self.vecType = 'time'
+        else:
+            self.vecType = 'space'
+    
+# ---
+
+class boost:
+    
+    '''Lorentz boost, with matrix and versor'''
+    
+    def __init__(self, *vel, **check):
+        self.vel = rnd3Vel() if check.get('rnd', True) else list(*vel)
+        self.boostMatrix = lorTransf(self.vel)
+
+# =============================================================================
+# actual code
+# =============================================================================
 
 print('=============================================================================\nOUTPUT\n=============================================================================')
 
