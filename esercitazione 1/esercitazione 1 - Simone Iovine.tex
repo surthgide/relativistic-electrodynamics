@@ -1,0 +1,528 @@
+% Esercitazione 1 di Elettrodinamica relativistica di Simone Iovine
+
+\documentclass[12pt]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{datetime}
+\usepackage{amsthm,amssymb,amsmath}
+\usepackage{mathtools}
+\usepackage{cases}
+\usepackage{centernot}
+\usepackage[makeroom]{cancel}
+\usepackage{graphics,graphicx}
+\graphicspath{ {images/} }
+\usepackage[a4paper,width=170mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage[svgnames]{xcolor}
+\usepackage{tikz,pgfplots,tikz-3dplot}
+\usepackage{xfrac}
+\usepackage{multirow,multicol}
+\usepackage{physics}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{bbm}
+\usepackage[toc]{appendix}
+\usepackage{parskip}
+\usepackage{tikz-cd}
+\usepackage{ifthen}
+\usepackage{xstring}
+\usepackage{witharrows}
+\usepackage[scr=boondox, cal=esstix]{mathalpha}
+
+% symbols definition
+
+\newcommand{\Ld}{\mathcal{L}}
+\newcommand{\Hd}{\mathcal{H}}
+\renewcommand{\grad}[1]{\va{\boldsymbol{\nabla}}{#1}}
+\renewcommand{\curl}[1]{\va{\boldsymbol{\nabla}} \wedge{#1}}
+\newcommand{\bigo}[1]{\mathcal{O} \! \left( #1 \right)}
+\newcommand{\smo}[1]{\mathcal{o} \! \left( #1 \right)}
+\newcommand{\lnab}[1]{\ln \abs{#1}}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\bigone}{\mathbbm{1}}
+\newcommand{\sgn}[1]{\operatorname{sgn} \left( #1 \right)}
+\newcommand{\diag}[1]{\operatorname{diag} \left( #1 \right)}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\ob}{\operatorname{Ob}}
+\newcommand{\mor}{\operatorname{Mor}}
+\newcommand{\st}{\, \middle| \,}
+\newcommand{\hatapp}{\; \hat{} \;}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+%\newcommand{\ie}{i.e. \phantom{$ \!\! $}}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\T}{\mathbb{T}}
+\renewcommand{\S}{\mathbb{S}}
+
+\newcommand{\rp}[1]{\R\mathcal{P}^{#1}}
+\newcommand{\B}{\mathcal{B}}
+
+%\newcommand{\g}{\mathfrak{g}}
+%\newcommand{\h}{\mathfrak{h}}
+%\newcommand{\so}{\mathfrak{so}}
+%\newcommand{\su}{\mathfrak{su}}
+
+\newcommand{\notimplies}{\centernot\implies}
+\newcommand{\E}{\exists \;}
+\newcommand{\ps}{\mathcal{P}}
+
+\newcommand{\hal}{\hspace{13px}}
+
+\DeclareDocumentCommand\dpdv{}{\displaystyle\partialderivative}
+\DeclareDocumentCommand\ddv{}{\displaystyle\derivative}
+
+% bracket under equations for explanations
+
+\definecolor{explcol}{RGB}{0, 191, 255} % light blue
+
+\newcommand{\expl}[2]{
+	\textcolor{explcol}{ %
+		\underbracket[.65pt][4.5pt]{ \textcolor{black}{#2} }_{ \mathclap{ \textcolor{explcol}{#1} } } %
+	} %
+}
+
+% subequations + align + side arrows environment
+
+% mind this link for explanation of if statement
+% https://tex.stackexchange.com/a/314/86
+
+% use this to shift back up the first line
+% \vspace{-2.1em}
+
+\makeatletter
+\def\subeq{\@ifnextchar[{\@with}{\@without}}
+\def\@with[#1]#2{
+	\begin{DispWithArrows}[subequations, displaystyle, wrap-lines]
+		& \label{#1} \tag{\theequation} \\
+		#2
+	\end{DispWithArrows}
+}
+\def\@without#1{
+	\begin{DispWithArrows}[subequations, displaystyle, wrap-lines]
+		#1
+	\end{DispWithArrows}
+}
+\makeatother
+
+% map definition
+
+\newcommand{\map}[5]{
+	\begin{align}
+		\begin{split}
+			#1 : #2 &\to #3 \\
+			#4 &\mapsto #5
+		\end{split}
+	\end{align}
+}
+
+% map w/o equation number
+
+\newcommand{\maps}[5]{
+	\begin{align*}
+		\begin{split}
+			#1 : #2 &\to #3 \\
+			#4 &\mapsto #5
+		\end{split}
+	\end{align*}
+}
+
+% image definition
+
+\newcommand{\img}[2]{
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=#1\textwidth,keepaspectratio]{#2}
+	\end{figure}
+}
+
+% diagram definition
+
+% mind this link for why & -> \&:
+% https://tex.stackexchange.com/questions/15093/single-ampersand-used-with-wrong-catcode-error-using-tikz-matrix-in-beamer
+
+\newcommand{\diagr}[1]{
+	\begin{figure}[H]
+		\centering
+		\begin{tikzcd}[ampersand replacement=\&]
+			#1
+		\end{tikzcd}
+	\end{figure}
+}
+
+% side-by-side (two neighbouring boxes)
+
+% \sbs{[width left box]}{[content left box]}{[width right box]}{[content right box]}
+
+\newcommand{\sbs}[4]{
+	\noindent\begin{minipage}[c]{#1\textwidth}
+		#2
+	\end{minipage}
+	\begin{minipage}[c]{#3\textwidth}
+		#4
+	\end{minipage}
+}
+
+%
+
+% exercise macro
+
+\newcounter{solutions}
+\setcounter{solutions}{42} % change this number from 42 to whatever to hide solutions
+
+% \exer{[title]}{[label]}{[exercise text]}{[solution]}
+
+\newcommand{\exer}[4]{
+	\section{Esercizio #1}\label{#2}
+	
+	\begin{tcolorbox}
+		#3
+	\end{tcolorbox}
+	
+	\ifthenelse{\thesolutions = 42}
+	{#4}
+	{}
+	
+	%
+	
+	\newpage
+}
+
+%
+
+\renewcommand{\contentsname}{Indice}
+
+\makeatletter
+\renewcommand{\@chapapp}{Capitolo}
+\makeatother
+
+% environments names
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{corollary}{Corollario}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem*{remark}{Osservazione}
+\newtheorem{definition}{Definizione}[theorem]
+\newtheorem{proposition}{Proposizione}[theorem]
+
+\renewcommand*{\proofname}{Dimostrazione}
+\renewcommand\qedsymbol{$\square$}
+
+% \highlight[<colour>]{<stuff>}
+
+\newcommand{\highlight}[2][yellow]{\mathchoice%
+	{\colorbox{#1}{$\displaystyle#2$}}%
+	{\colorbox{#1}{$\textstyle#2$}}%
+	{\colorbox{#1}{$\scriptstyle#2$}}%
+	{\colorbox{#1}{$\scriptscriptstyle#2$}}}%
+
+% hlc = highlight colour
+
+\definecolor{hlc1}{RGB}{204,241,202} % green
+\definecolor{hlc2}{RGB}{255,143,188} % pink
+\definecolor{hlc3}{RGB}{163,209,255} % light blue
+
+\newcommand{\hl}[2]{%
+	\IfEqCase{#1}{%
+		{1}{\highlight[hlc1]{#2}}%
+		{2}{\highlight[hlc2]{#2}}%%
+		{3}{\highlight[hlc3]{#2}}%
+		% can add more cases here as desired
+	}[\PackageError{choosecolour}{Undefined option to hl: #1}{}]%
+}
+
+% blue links for footsnotes and references
+
+\usepackage[
+bookmarksnumbered = true,
+linktocpage = true
+]{hyperref}
+
+\hypersetup{
+	colorlinks = true,
+	linkcolor = blue,
+	anchorcolor = blue,
+	citecolor = blue,
+	filecolor = blue,
+	urlcolor = blue
+}
+
+\begin{document}
+	
+% titolo
+
+\begin{center}
+	{\Large
+		\textbf{Esercitazione 1} \\
+			Elettrodinamica relativistica \\
+			A.A. 2023/2024 \\
+			\vspace{0.7cm}
+			\textit{Simone Iovine}
+		}
+\end{center}
+
+\vspace{2cm}
+
+%
+
+\section{Esercizio 1}
+
+Riscriviamo la definizione della rapidità
+
+\begin{equation}
+	y \doteq \dfrac{1}{2} \ln(\dfrac{E + c p_{z}}{E - c p_{z}}) %
+	= \dfrac{1}{2} \ln(\dfrac{1 + \dfrac{v_{z}}{c}}{1 - \dfrac{v_{z}}{c}})
+\end{equation}
+
+nel seguente modo
+
+\begin{equation}
+	e^{2 y} = \dfrac{E + c p_{z}}{E - c p_{z}} %
+	= \dfrac{1 + \dfrac{v_{z}}{c}}{1 - \dfrac{v_{z}}{c}}
+\end{equation}
+
+definendo
+
+\begin{equation}
+	\beta \doteq \dfrac{u}{c}
+\end{equation}
+
+dove $u$ è la velocità del boost, abbiamo anche
+
+\begin{equation}
+	e^{2 \eta} = \dfrac{1 + \beta}{1 - \beta}
+\end{equation}
+
+Considerando il 4-momento
+
+\begin{equation}
+	\va{p} = (E, c \va{p}) %
+	= (E, c p_{x}, c p_{y}, c p_{z})
+\end{equation}
+
+un boost lungo $z$ può essere calcolato tramite la matrice
+
+\begin{equation}
+	\Lambda = \bmqty{\gamma & 0 & 0 & - \beta \gamma \\
+					0 & 1 & 0 & 0 \\
+					0 & 0 & 1 & 0 \\
+					- \beta \gamma & 0 & 0 & \gamma}
+\end{equation}
+
+dunque
+
+\begin{equation}
+	\va{p}' = \Lambda \va{p}
+\end{equation}
+
+Le componenti che hanno subito un cambiamento saranno
+
+\begin{equation}
+	\begin{cases}
+		E' = \gamma (E - \beta c p_{z}) \\
+		c p_{z}' = \gamma (c p_{z} - \beta E)
+	\end{cases}
+\end{equation}
+
+Siccome i fasci sono incidenti, operiamo il cambiamento di segno $\beta \to - \beta$, da cui
+
+\begin{equation}
+	\begin{cases}
+		E' = \gamma (E + \beta c p_{z}) \\
+		c p_{z}' = \gamma (c p_{z} + \beta E)
+	\end{cases}
+\end{equation}
+
+A questo punto consideriamo la rapidità nel sistema di riferimento primato
+
+\subeq{
+	e^{2 y'} &= \dfrac{E' + c p_{z}'}{E' - c p_{z}'} \\\\
+	&= \dfrac{\gamma (E + \beta c p_{z}) + \gamma (c p_{z} + \beta E)}{\gamma (E + \beta c p_{z}) - \gamma (c p_{z} + \beta E)} \\\\
+	&= \dfrac{E + \beta c p_{z} + c p_{z} + \beta E}{E + \beta c p_{z} - c p_{z} - \beta E} \\\\
+	&= \dfrac{E + \beta c p_{z} + \beta (E + c p_{z})}{E - \beta c p_{z} - \beta (E - c p_{z})} \\\\
+	&= \expl{e^{2 y}}{\dfrac{E + c p_{z}}{E - c p_{z}}} \, \expl{e^{2 \eta}}{\dfrac{1 + \beta}{1 - \beta}} \\
+	&= e^{2(y + \eta)}
+}
+
+\begin{equation}
+	e^{2 y'} = e^{2 y'} e^{2 \eta} %
+	\implies %
+	y'= y + \eta
+\end{equation}
+
+Analogamente, si può trovare la stessa soluzione usando la seconda definizione della rapidità. Consideriamo ancora il boost in $z$ della 4-posizione
+
+\begin{equation}
+	\begin{cases}
+		\va{x} = (c t, \va{x}) \\
+		\va{x}' = \Lambda \va{x}
+	\end{cases}
+\end{equation}
+
+\begin{equation}
+	\begin{cases}
+		c t' = \gamma (c t - \beta z) \\
+		z' = \gamma (z - \beta c t)
+	\end{cases}
+\end{equation}
+
+da questi possiamo derivare la velocità nel sistema di riferimento primato
+
+\begin{equation}
+	\dfrac{v_{z}'}{c} = \dfrac{z'}{c t'} %
+	= \dfrac{z - \beta c t}{c t - \beta z} %
+	= \dfrac{c t}{c t} \dfrac{\dfrac{z}{ct} - \beta}{1 - \beta \dfrac{z}{ct}} %
+	= \dfrac{\dfrac{v_{z}}{c} - \beta}{1 - \beta \dfrac{v_{z}}{c}}
+\end{equation}
+
+Ancora una volta, siccome i fasci sono incidenti, operiamo il cambiamento di segno $\beta \to - \beta$, da cui
+
+\begin{equation}
+	\dfrac{v_{z}'}{c} = \dfrac{\dfrac{v_{z}}{c} + \beta}{1 + \beta \dfrac{v_{z}}{c}}
+\end{equation}
+
+A questo punto sostituiamo nella definizione della rapidità
+
+\subeq{
+	e^{2 y'} &= \dfrac{1 + \dfrac{v_{z}'}{c}}{1 - \dfrac{v_{z}'}{c}} \\
+	&= \dfrac{1 + \dfrac{\dfrac{v_{z}}{c} + \beta}{1 + \beta \dfrac{v_{z}}{c}}}{1 - \dfrac{\dfrac{v_{z}}{c} + \beta}{1 + \beta \dfrac{v_{z}}{c}}} \\
+	&= \dfrac{1 + \beta \dfrac{v_{z}}{c} + \dfrac{v_{z}}{c} + \beta}{1 + \beta \dfrac{v_{z}}{c} - \dfrac{v_{z}}{c} - \beta} \\
+	&= \dfrac{1 + \beta + \dfrac{v_{z}}{c} (1 + \beta)}{1 - \beta - \dfrac{v_{z}}{c} (1 - \beta)} \\
+	&= \expl{e^{2 y}}{ \dfrac{1 + \dfrac{v_{z}}{c}}{1 - \dfrac{v_{z}}{c}}} \, \expl{e^{2 \eta}}{\dfrac{1 + \beta}{1 - \beta}} \\
+	&= e^{2(y + \eta)}
+}
+
+\begin{equation}
+	e^{2 y'} = e^{2 y'} e^{2 \eta} %
+	\implies %
+	y'= y + \eta
+\end{equation}
+
+\section{Esercizio 2}
+
+Riscriviamo la formula per la sezione d'urto nel seguente modo
+
+\begin{equation}
+	\sigma = \dfrac{\dd{\nu}}{\dd{V} \dd{t}} \, \dfrac{1}{v_{rel} \, n_{1} \, n_{2}}
+\end{equation}
+
+Tutte le quantità riportate in questa formula sono misurate nel sistema di riferimento del laboratorio, il quale è solidale anche al bersaglio di densità $n_{2}$. \\
+Sfruttando i fenomeni di dilatazione del tempo e contrazione delle lunghezze, possiamo riscrivere le quantità riportate nella formula nel sistema di riferimento solidale al fascio incidente di densità $n_{1}$:
+
+\begin{equation}
+	\begin{dcases}
+		\dd{\nu}' = \dd{\nu} \\
+		\dd{V}' = \dfrac{1}{\gamma} \, \dd{V} \\
+		\dd{t}' = \gamma \dd{t} \\
+		n_{1}' = \dfrac{1}{\gamma} \, n_{1} \\
+		n_{2}' = \gamma \, n_{2}
+	\end{dcases}
+\end{equation}
+
+questo perché:
+
+\begin{itemize}
+	\item il numero di urti $\dd{\nu}$ rimane costante indipendentemente dal sistema di riferimento considerato,
+	
+	\item il volume considerato dove si contano gli urti appare contratto per un osservatore solidale con il fascio in movimento a causa della velocità relativa,
+	
+	\item per lo stesso motivo, l'intervallo di tempo di misura appare dilatato,
+	
+	\item la densità di particelle del fascio incidente diminuisce in quanto il volume in cui questa viene calcolata è più grande rispetto al volume misurato nel sistema di riferimento solidale al laboratorio (il quale appare contratto a causa del movimento del fascio incidente rispetto al laboratorio), 
+	
+	\item la densità di particelle del bersaglio invece aumenta per lo stesso motivo.
+\end{itemize}
+
+A questo punto, sostituendo le quantità calcolate nel sistema di riferimento solidale con il fascio incidente nella formula per la sezione d'urto calcolata in questo sistema, otteniamo
+
+\begin{equation}
+	\sigma' = \dfrac{\dd{\nu}'}{\dd{V}' \dd{t}'} \, \dfrac{1}{v_{rel} \, n_{1}' \, n_{2}'} %
+	= \dfrac{\dd{\nu}}{\dfrac{1}{\gamma} \, \dd{V} \gamma \, \dd{t}'} \, \dfrac{1}{v_{rel} \, \dfrac{1}{\gamma} \, n_{1} \, \gamma \, n_{2}'} %
+	= \sigma
+\end{equation}
+
+\section{Esercizio 3}
+
+\subsection*{Equazione del moto}
+
+qui
+
+\subsection*{Formula per l'accelerazione}
+
+Poniamo che la velocità $\beta \doteq u / c$ sia limitata all'asse $z$, dunque la trasformazione è data da
+
+\begin{equation}
+	\begin{cases}
+		c \dd{t}' = \gamma (c \dd{t} - \beta \dd{z}) \\
+		\dd{z}' = \gamma (\dd{z} - \beta c \dd{t})
+	\end{cases}
+\end{equation}
+
+da questi possiamo derivare la velocità $v$ nel sistema di riferimento primato $v'$ come
+
+\begin{equation}
+	v' = c \, \dfrac{\dd{z}'}{c \dd{t}'} %
+	= c \, \dfrac{\dd{z} - \beta c \dd{t}}{c \dd{t} - \beta \dd{z}} %
+	= c \, \dfrac{c \dd{t}}{c \dd{t}} \dfrac{\dfrac{\dd{z}}{c \dd{t}} - \beta}{1 - \beta \dfrac{\dd{z}}{c \dd{t}}} %
+	= c \, \dfrac{\dfrac{v}{c} - \beta}{1 - \beta \dfrac{v}{c}} %
+	= \dfrac{v - \beta c}{1 - \beta \dfrac{v}{c}}
+\end{equation}
+
+Usando
+
+\begin{equation}
+	\gamma \doteq \dfrac{1}{\sqrt{1 - \beta^{2}}} %
+	\implies %
+	1 - \beta^{2} = \dfrac{1}{\gamma^{2}}
+\end{equation}
+
+calcoliamo il differenziale della velocità
+
+\subeq{
+	\dd{v}' &= \dd{(v - \beta c)} \dfrac{1}{1 - \beta \dfrac{v}{c}} + (v - \beta c) \dd{\left( \dfrac{1}{1 - \beta \dfrac{v}{c}} \right)} \\
+	&= \dfrac{\dd{v}}{1 - \beta \dfrac{v}{c}} + (v - \beta c) \left( - \dfrac{1}{\left(1 - \beta \dfrac{v}{c}\right)^{2}} \right) \left( - \dfrac{\beta}{c} \dd{v} \right) \\
+	&= \left( \dfrac{1}{1 - \beta \dfrac{v}{c}} + \dfrac{\left( \dfrac{v}{c} - \beta \right) \beta}{\left(1 - \beta \dfrac{v}{c}\right)^{2}} \right) \dd{v} \\
+	&= \dfrac{1 - \beta \dfrac{v}{c} + \beta \dfrac{v}{c} - \beta^{2}}{\left(1 - \beta \dfrac{v}{c}\right)^{2}} \dd{v} \\
+	&= \dfrac{1}{\gamma^{2} \left(1 - \beta \dfrac{v}{c}\right)^{2}} \dd{v}
+}
+
+A questo punto possiamo calcolare l'accelerazione
+
+\subeq{
+	a' &\doteq \dv{v'}{t'} \\
+	&= \dfrac{\dd{v}}{\gamma^{2} \left(1 - \beta \dfrac{v}{c}\right)^{2}} \dfrac{c}{\gamma (c \dd{t} - \beta \dd{z})} \\
+	&= \dfrac{c}{\gamma^{3} \left(1 - \beta \dfrac{v}{c}\right)^{2} (c \dd{t} - \beta \dd{z})} \dd{v} \\
+	&= \dfrac{c}{\gamma^{3} \left(1 - \beta \dfrac{v}{c}\right)^{2} c \dd{t} \left(1 - \beta \expl{v/c}{\dfrac{\dd{z}}{c \dd{t}}}\right)} \dd{v} \\
+	&= \dfrac{1}{\gamma^{3} \left(1 - \beta \dfrac{v}{c}\right)^{3}} \dv{v}{t} \\
+	&= \dfrac{1}{\gamma^{3} \left(1 - \beta \dfrac{v}{c}\right)^{3}} \, a
+}
+
+Essendo la velocità del boost la stessa della velocità di cui abbiamo operato la trasformazione, i.e. $\beta = v/c$, otteniamo
+
+\begin{equation}
+	a' = \gamma^{3} a
+\end{equation}
+
+\subsection*{Accelerazione di un protone}
+
+qui
+
+
+
+
+
+
+\section{Esercizio 4}
+
+i
+
+\end{document}
