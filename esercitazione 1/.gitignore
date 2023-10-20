@@ -8,3 +8,6 @@
 *.toc
 *.synctex(busy)
 *-blx.bib
+*.maf
+*.mtc
+*.mtc0

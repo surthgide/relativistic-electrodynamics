@@ -1,6 +1,6 @@
 % Esercitazione 1 di Elettrodinamica relativistica di Simone Iovine
 
-\documentclass[12pt]{report}
+\documentclass[12pt,notitlepage]{report}
 
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
@@ -32,6 +32,7 @@
 \usepackage{witharrows}
 \usepackage[scr=boondox, cal=esstix]{mathalpha}
 \usepackage{listings}
+\usepackage{minitoc}
 
 % python code stuff
 
@@ -296,6 +297,14 @@ linktocpage = true
 	urlcolor = blue
 }
 
+% table of content stuff
+
+\renewcommand{\thesection}{\arabic{section}}
+
+\makeatletter
+\newcommand*{\toccontents}{\@starttoc{toc}}
+\makeatother
+
 \begin{document}
 	
 % titolo
@@ -314,7 +323,13 @@ linktocpage = true
 
 %
 
-\section*{Esercizio 1}
+\section*{Indice}
+
+\toccontents
+
+%
+
+\section{Esercizio 1}
 
 Riscriviamo la definizione della rapidità
 
@@ -449,7 +464,7 @@ A questo punto sostituiamo nella definizione della rapidità
 
 % ==============================================================================
 
-\section*{Esercizio 2}
+\section{Esercizio 2}
 
 Riscriviamo la formula per la sezione d'urto nel seguente modo
 
@@ -494,7 +509,7 @@ A questo punto, sostituendo le quantità calcolate nel sistema di riferimento so
 
 % ==============================================================================
 
-\section*{Esercizio 3}
+\section{Esercizio 3}
 
 \subsection*{Equazione del moto}
 
@@ -646,7 +661,7 @@ Sostituendo i dati
 	\begin{dcases}
 		\mathcal{E} = 1 \operatorname{TeV} = 10^{3} \operatorname{GeV} \\
 		m = 1 \operatorname{\dfrac{GeV}{c^{2}}} \\
-		E = 1 \operatorname{\dfrac{V}{m}} = 6.2 \cdot 10^{9} \operatorname{\dfrac{GeV}{m}} \\
+		E = 1 \operatorname{\dfrac{V}{m}} = 6.2 \cdot 10^{9} \operatorname{\dfrac{GeV}{m \, C}} \\
 		e = 1.6 \cdot 10^{-19} \operatorname{C} \\
 		c = 3 \cdot 10^{8} \operatorname{\dfrac{m}{s}}
 	\end{dcases}
@@ -657,7 +672,7 @@ otteniamo
 \subeq{
 	t &= \dfrac{\mathcal{E}}{m c a'} \sqrt{ 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} } \\
 	&= \dfrac{\mathcal{E}}{e c E} \sqrt{ 1 - \dfrac{m^{2} c^{4}}{\mathcal{E}^{2}} } \\
-	&= \expl{secondi}{\dfrac{ 10^{3} \operatorname{GeV} }{ (1.6 \cdot 10^{-19} \operatorname{C}) \left( 3 \cdot 10^{8} \operatorname{\dfrac{m}{s}} \right) \left( 6.2 \cdot 10^{9} \operatorname{\dfrac{GeV}{m}} \right) }} \expl{adimensionale}{\sqrt{ 1 - \dfrac{ 1 \operatorname{\dfrac{GeV^{2}}{c^{4}}} c^{4} }{ 10^{6} \operatorname{GeV^{2}} } }}
+	&= \expl{secondi}{\dfrac{ 10^{3} \operatorname{GeV} }{ (1.6 \cdot 10^{-19} \operatorname{C}) \left( 3 \cdot 10^{8} \operatorname{\dfrac{m}{s}} \right) \left( 6.2 \cdot 10^{9} \operatorname{\dfrac{GeV}{m \, C}} \right) }} \expl{adimensionale}{\sqrt{ 1 - \dfrac{ 1 \operatorname{\dfrac{GeV^{2}}{c^{4}}} c^{4} }{ 10^{6} \operatorname{GeV^{2}} } }}
 }
 
 il quale espresso in minuti e secondi risulta
@@ -668,7 +683,7 @@ il quale espresso in minuti e secondi risulta
 
 % ==============================================================================
 
-\section*{Esercizio 4}
+\section{Esercizio 4}
 
 Il linguaggio scelto per questo esercizio è Python. \\
 Importiamo \lstinline|numpy| per la radice quadrata, il prodotto matriciale, il generatore di numeri casuali e le matrici diagonali. Tramite quest'ultima, definiamo il tensore metrico \lstinline|eta|.
@@ -946,7 +961,7 @@ Queste risultano tutte nulle come ci si aspetta in quanto il prodotto scalare è
 
 % ==============================================================================
 
-\section*{Codice completo}
+\section{Codice completo}
 
 \begin{verbatim}
 	# =============================================================================
