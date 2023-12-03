@@ -1,0 +1,453 @@
+% Esercitazione 2 di Elettrodinamica relativistica di Simone Iovine
+
+\documentclass[12pt,notitlepage]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{datetime}
+\usepackage{amsthm,amssymb,amsmath}
+\usepackage{mathtools}
+\usepackage{cases}
+\usepackage{centernot}
+\usepackage[makeroom]{cancel}
+\usepackage{graphics,graphicx}
+\graphicspath{ {images/} }
+\usepackage[a4paper,width=170mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage[svgnames]{xcolor}
+\usepackage{tikz,pgfplots,tikz-3dplot}
+\usepackage{xfrac}
+\usepackage{multirow,multicol}
+\usepackage{physics}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{bbm}
+\usepackage[toc]{appendix}
+\usepackage{parskip}
+\usepackage{tikz-cd}
+\usepackage{ifthen}
+\usepackage{xstring}
+\usepackage{witharrows}
+\usepackage[scr=boondox, cal=esstix]{mathalpha}
+\usepackage{listings}
+\usepackage{minitoc}
+\usepackage{tensor}
+
+% python code stuff
+
+% check this link for explanation:
+% https://www.overleaf.com/learn/latex/Code_Highlighting_with_minted
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% i don't know why this new environment doesn't work
+
+%\newcommand{\pycode}[1]{
+%	\begin{lstlisting}[language=Python]
+%		#1
+%	\end{lstlisting}
+%}
+
+% symbols definition
+
+\newcommand{\Ld}{\mathcal{L}}
+\newcommand{\Hd}{\mathcal{H}}
+\renewcommand{\grad}[1]{\va{\boldsymbol{\nabla}}{#1}}
+\renewcommand{\curl}[1]{\va{\boldsymbol{\nabla}} \wedge{#1}}
+\newcommand{\vas}[1]{\va{\boldsymbol{#1}}}
+\newcommand{\bigo}[1]{\mathcal{O} \! \left( #1 \right)}
+\newcommand{\smo}[1]{\mathcal{o} \! \left( #1 \right)}
+\newcommand{\lnab}[1]{\ln \abs{#1}}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\bigone}{\mathbbm{1}}
+\newcommand{\sgn}[1]{\operatorname{sgn} \left( #1 \right)}
+\newcommand{\diag}[1]{\operatorname{diag} \left( #1 \right)}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\ob}{\operatorname{Ob}}
+\newcommand{\mor}{\operatorname{Mor}}
+\newcommand{\st}{\, \middle| \,}
+\newcommand{\hatapp}{\; \hat{} \;}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+%\newcommand{\ie}{i.e. \phantom{$ \!\! $}}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\T}{\mathbb{T}}
+\renewcommand{\S}{\mathbb{S}}
+
+\newcommand{\rp}[1]{\R\mathcal{P}^{#1}}
+\newcommand{\B}{\mathcal{B}}
+
+%\newcommand{\g}{\mathfrak{g}}
+%\newcommand{\h}{\mathfrak{h}}
+%\newcommand{\so}{\mathfrak{so}}
+%\newcommand{\su}{\mathfrak{su}}
+
+\newcommand{\notimplies}{\centernot\implies}
+\newcommand{\E}{\exists \;}
+\newcommand{\ps}{\mathcal{P}}
+
+\newcommand{\hal}{\hspace{13px}}
+
+\DeclareDocumentCommand\dpdv{}{\displaystyle\partialderivative}
+\DeclareDocumentCommand\ddv{}{\displaystyle\derivative}
+
+% bracket under equations for explanations
+
+\definecolor{explcol}{RGB}{0, 191, 255} % light blue
+
+\newcommand{\expl}[2]{
+	\textcolor{explcol}{ %
+		\underbracket[.65pt][4.5pt]{ \textcolor{black}{#2} }_{ \mathclap{ \textcolor{explcol}{#1} } } %
+	} %
+}
+
+% subequations + align + side arrows environment
+
+% mind this link for explanation of if statement
+% https://tex.stackexchange.com/a/314/86
+
+% use this to shift back up the first line
+% \vspace{-2.1em}
+
+\makeatletter
+\def\subeq{\@ifnextchar[{\@with}{\@without}}
+\def\@with[#1]#2{
+	\begin{DispWithArrows}[subequations, displaystyle, wrap-lines]
+		& \label{#1} \tag{\theequation} \\
+		#2
+	\end{DispWithArrows}
+}
+\def\@without#1{
+	\begin{DispWithArrows}[subequations, displaystyle, wrap-lines]
+		#1
+	\end{DispWithArrows}
+}
+\makeatother
+
+% map definition
+
+\newcommand{\map}[5]{
+	\begin{align}
+		\begin{split}
+			#1 : #2 &\to #3 \\
+			#4 &\mapsto #5
+		\end{split}
+	\end{align}
+}
+
+% map w/o equation number
+
+\newcommand{\maps}[5]{
+	\begin{align*}
+		\begin{split}
+			#1 : #2 &\to #3 \\
+			#4 &\mapsto #5
+		\end{split}
+	\end{align*}
+}
+
+% image definition
+
+\newcommand{\img}[2]{
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=#1\textwidth,keepaspectratio]{#2}
+	\end{figure}
+}
+
+% diagram definition
+
+% mind this link for why & -> \&:
+% https://tex.stackexchange.com/questions/15093/single-ampersand-used-with-wrong-catcode-error-using-tikz-matrix-in-beamer
+
+\newcommand{\diagr}[1]{
+	\begin{figure}[H]
+		\centering
+		\begin{tikzcd}[ampersand replacement=\&]
+			#1
+		\end{tikzcd}
+	\end{figure}
+}
+
+% side-by-side (two neighbouring boxes)
+
+% \sbs{[width left box]}{[content left box]}{[width right box]}{[content right box]}
+
+\newcommand{\sbs}[4]{
+	\noindent\begin{minipage}[c]{#1\textwidth}
+		#2
+	\end{minipage}
+	\begin{minipage}[c]{#3\textwidth}
+		#4
+	\end{minipage}
+}
+
+%
+
+% exercise macro
+
+%\newcounter{solutions}
+%\setcounter{solutions}{42} % change this number from 42 to whatever to hide solutions
+
+% \exer{[title]}{[label]}{[exercise text]}{[solution]}
+
+%\newcommand{\exer}[4]{
+%	\section{Esercizio #1}\label{#2}
+%	
+%	\begin{tcolorbox}
+%		#3
+%	\end{tcolorbox}
+%	
+%	\ifthenelse{\thesolutions = 42}
+%	{#4}
+%	{}
+%	
+%	%
+%	
+%	\newpage
+%}
+
+%
+
+\renewcommand{\contentsname}{Indice}
+
+\makeatletter
+\renewcommand{\@chapapp}{Capitolo}
+\makeatother
+
+% environments names
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{corollary}{Corollario}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem*{remark}{Osservazione}
+\newtheorem{definition}{Definizione}[theorem]
+\newtheorem{proposition}{Proposizione}[theorem]
+
+\renewcommand*{\proofname}{Dimostrazione}
+\renewcommand\qedsymbol{$\square$}
+
+% \highlight[<colour>]{<stuff>}
+
+\newcommand{\highlight}[2][yellow]{\mathchoice%
+	{\colorbox{#1}{$\displaystyle#2$}}%
+	{\colorbox{#1}{$\textstyle#2$}}%
+	{\colorbox{#1}{$\scriptstyle#2$}}%
+	{\colorbox{#1}{$\scriptscriptstyle#2$}}}%
+
+% hlc = highlight colour
+
+\definecolor{hlc1}{RGB}{204,241,202} % green
+\definecolor{hlc2}{RGB}{255,143,188} % pink
+\definecolor{hlc3}{RGB}{163,209,255} % light blue
+
+\newcommand{\hl}[2]{%
+	\IfEqCase{#1}{%
+		{1}{\highlight[hlc1]{#2}}%
+		{2}{\highlight[hlc2]{#2}}%%
+		{3}{\highlight[hlc3]{#2}}%
+		% can add more cases here as desired
+	}[\PackageError{choosecolour}{Undefined option to hl: #1}{}]%
+}
+
+% blue links for footsnotes and references
+
+\usepackage[
+bookmarksnumbered = true,
+linktocpage = true
+]{hyperref}
+
+\hypersetup{
+	colorlinks = true,
+	linkcolor = blue,
+	anchorcolor = blue,
+	citecolor = blue,
+	filecolor = blue,
+	urlcolor = blue
+}
+
+% table of content stuff
+
+\renewcommand{\thesection}{\arabic{section}}
+
+\makeatletter
+\newcommand*{\toccontents}{\@starttoc{toc}}
+\makeatother
+
+\begin{document}
+	
+% titolo
+
+\begin{center}
+	{\Large
+		\textbf{Esercitazione 2} \\
+			Elettrodinamica relativistica \\
+			A.A. 2023/2024 \\
+			\vspace{0.7cm}
+			\textit{Simone Iovine}
+		}
+\end{center}
+
+\vspace{2cm}
+
+%
+
+\section*{Indice}
+
+\toccontents
+
+%
+
+\section{Esercizio 1}
+
+L'equazione delle onde per onde elettromagnetiche può essere scritta come
+
+\begin{equation}
+	\square \varphi \doteq \partial_{\mu} \partial^{\mu} \varphi = 0
+\end{equation}
+
+dove $\varphi$ è una funzione scalare e il 4-gradiente è dato da
+
+\begin{equation}
+	\partial_{\mu} \doteq \left( \dfrac{1}{c} \pdv{t}, \grad{} \right)
+\end{equation}
+
+dunque
+
+\begin{equation}
+	\square \doteq \partial_{\mu} \partial^{\mu} = \dfrac{1}{c^{2}} \pdv[2]{t} - \nabla^{2}
+\end{equation}
+
+Al fine di verificare l'invarianza di questa equazione, la riscriviamo calcolata in un diverso sistema di riferimento (primato):
+
+\subeq{
+	\square' \varphi &\doteq \partial'_{\mu} \partial'^{\mu} \varphi \\
+	&= g_{\mu \nu} \partial'^{\nu} \partial'^{\mu} \varphi \\
+	&= g_{\mu \nu} \Lambda\indices{^{\nu}_{\rho}} \partial^{\rho} \Lambda\indices{^{\mu}_{\sigma}} \partial^{\sigma} \varphi %
+		\Arrow{$\partial^{\mu} \Lambda\indices{^{\nu}_{\rho}} = 0$} \\
+	&= g_{\mu \nu} \Lambda\indices{^{\nu}_{\rho}} \Lambda\indices{^{\mu}_{\sigma}} \partial^{\rho} \partial^{\sigma} \varphi
+}
+
+dove il tensore metrico per lo spazio piatto è dato da
+
+\begin{equation}
+	g_{\mu \nu} = \diag{1, -1, -1, -1}
+\end{equation}
+
+Considerando delle trasformazioni di Lorentz, vale la relazione
+
+\begin{equation}
+	g_{\mu \nu} (\Lambda_{L})\indices{^{\nu}_{\rho}} (\Lambda_{L})\indices{^{\mu}_{\sigma}} = g_{\rho \sigma}
+\end{equation}
+
+dove la matrice di trasformazione è data da
+
+\begin{equation}
+	(\Lambda_{L})\indices{^{\mu}_{\nu}} = %
+		\bmqty{ \gamma & - \beta^{1} \gamma & - \beta^{2} \gamma & - \beta^{3} \gamma \\
+				- \beta^{1} \gamma & 1 + A (\beta^{1})^{2} & A \beta^{1} \beta^{2} & A \beta^{1} \beta^{3} \\
+				- \beta^{2} \gamma & A \beta^{2} \beta^{1} & 1 + A (\beta^{2})^{2} & A \beta^{2} \beta^{3} \\
+				- \beta^{3} \gamma & A \beta^{3} \beta^{1} & A \beta^{3} \beta^{2} & 1 + A (\beta^{3})^{2}
+				} %
+	\qquad %
+	\begin{cases}
+		\vas{\beta} = \dfrac{1}{c} \, (v^{1}, v^{2}, v^{3}) \\\\
+		\gamma \doteq \left( 1 - \abs{\vas{\beta}}^{2} \right)^{-1/2} \\\\
+		A \doteq \abs{\vas{\beta}}^{-2} (\gamma - 1)
+	\end{cases}
+\end{equation}              
+
+dunque
+
+\subeq{
+	\square' \varphi &= g_{\mu \nu} (\Lambda_{L})\indices{^{\nu}_{\rho}} (\Lambda_{L})\indices{^{\mu}_{\sigma}} \partial^{\rho} \partial^{\sigma} \varphi \\
+	&= g_{\rho \sigma} \partial^{\rho} \partial^{\sigma} \varphi \\
+	&= \partial_{\rho} \partial^{\rho} \varphi \\
+	&= \square \varphi \\
+	&= 0
+}
+
+Le trasformazioni di Galilei sono invece rappresentate dalla matrice
+
+\begin{equation}
+	(\Lambda_{G})\indices{^{\mu}_{\nu}} = %
+		\bmqty{ 1 & - v^{1} & - v^{2} & - v^{3} \\
+				0 & -1 & 0 & 0 \\
+				0 & 0 & -1 & 0 \\
+				0 & 0 & 0 & -1
+				}
+\end{equation}
+
+Per queste trasformazioni di Lorentz quindi la relazione considerata in precedenza produce un risultato diverso
+
+\begin{equation}
+	g_{\mu \nu} (\Lambda_{G})\indices{^{\nu}_{\rho}} (\Lambda_{G})\indices{^{\mu}_{\sigma}} = g_{\rho \sigma} + K_{\rho \sigma} %
+	\qcomma K_{\rho \sigma} \doteq %
+	\bmqty{ 1 & - v^{1} & - v^{2} & - v^{3} \\
+			- v^{1} & \left(v^{1}\right)^{2} - 1 & v^{1} v^{2} & v^{1} v^{3} \\
+			- v^{2} & v^{2} v^{1} & \left(v^{2}\right)^{2} - 1 & v^{2} v^{3} \\
+			- v^{3} & v^{3} v^{1} & v^{3} v^{2} & \left(v^{3}\right)^{2} - 1
+			}
+\end{equation}
+
+perciò
+
+\subeq{
+	\square' \varphi &= g_{\mu \nu} (\Lambda_{G})\indices{^{\nu}_{\rho}} (\Lambda_{G})\indices{^{\mu}_{\sigma}} \partial^{\rho} \partial^{\sigma} \varphi \\
+	&= (g_{\rho \sigma} + K_{\rho \sigma}) \partial^{\rho} \partial^{\sigma} \varphi \\
+	&= \expl{0}{\square \varphi} + \expl{\text{in generale } \neq 0}{K_{\rho \sigma} \partial^{\rho} \partial^{\sigma} \varphi} \\
+	&\neq 0
+}
+
+% ==============================================================================
+
+\section{Esercizio 2}
+
+qui
+
+% ==============================================================================
+
+\section{Esercizio 3}
+
+qui
+
+% ==============================================================================
+
+\section{Esercizio 4}
+
+qui
+
+\end{document}
