@@ -79,7 +79,8 @@
 \newcommand{\Ld}{\mathcal{L}}
 \newcommand{\Hd}{\mathcal{H}}
 \renewcommand{\grad}[1]{\va{\boldsymbol{\nabla}}{#1}}
-\renewcommand{\curl}[1]{\va{\boldsymbol{\nabla}} \wedge{#1}}
+\renewcommand{\div}[1]{\va{\boldsymbol{\nabla}} \vdot {#1}}
+\renewcommand{\curl}[1]{\va{\boldsymbol{\nabla}} \wedge {#1}}
 \newcommand{\vas}[1]{\va{\boldsymbol{#1}}}
 \newcommand{\bigo}[1]{\mathcal{O} \! \left( #1 \right)}
 \newcommand{\smo}[1]{\mathcal{o} \! \left( #1 \right)}
@@ -548,6 +549,42 @@ qui
 
 \section{Esercizio 4}
 
-qui
+I campi elettrico e magnetico possono essere definiti in relazione ai potenziali scalare e vettore:
+
+\begin{equation}
+	\begin{dcases}
+		\va{E} = - \dfrac{1}{c} \, \pdv{\va{A}}{t} - \grad{\varphi} \\
+		\va{B} = \curl{\va{A}}
+	\end{dcases}
+\end{equation}
+
+Affinché siano entrambi nulli, possiamo considerare $\va{A}$ come gradiente di una funzione $g = g(\va{x})$, in quanto il rotore di un gradiente è sempre nullo. Moltiplicando questo per una funzione che dipende solo dal tempo $f = f(t)$, otteniamo
+
+\subeq{
+	\va{E} &= 0 \\
+	\grad{\varphi} &= - \dfrac{1}{c} \, \pdv{\va{A}}{t} \\
+	&= - \dfrac{1}{c} \, \pdv{t} \left( f \, \grad{g} \right) \\
+	&= - \dfrac{1}{c} \dot{f} \, \grad{g}
+}
+
+dunque possiamo porre
+
+\begin{equation}
+	\varphi = - \dfrac{1}{c} \dot{f}(t) \, g(\va{x}) + h(t) %
+	\qcomma h = h(t)
+\end{equation}
+
+Ponendo come moltiplicatore una funzione $\xi$ tale che $\partial^{\mu} \xi = 0$, possiamo infine scrivere la forma del 4-potenziale ricercato
+
+\begin{equation}
+	A^{\mu} = \xi \left( - \dfrac{1}{c} \dot{f} g + h, f \, \grad{g} \right)
+\end{equation}
+
+
+
+
+
+
+
 
 \end{document}
