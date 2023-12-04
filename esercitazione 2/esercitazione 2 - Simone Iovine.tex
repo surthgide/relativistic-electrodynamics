@@ -436,7 +436,107 @@ perciò
 
 \section{Esercizio 2}
 
-qui
+Consideriamo le trasformazioni generiche per i campi elettrico e magnetico:
+
+\begin{equation}
+	\begin{dcases}
+		\va{E}' = \gamma (\va{E} + \vas{\beta} \wedge \va{B}) - \dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) \vas{\beta} \\
+		\va{B}' = \gamma (\va{B} - \vas{\beta} \wedge \va{E}) - \dfrac{\gamma - 1}{\beta^{2}} (\va{B} \vdot \vas{\beta}) \vas{\beta}
+	\end{dcases}
+\end{equation}
+
+\subsection*{Puramente elettrico $\boldsymbol{\to}$ puramente magnetico}
+
+Poniamo
+
+\begin{equation}
+	\begin{cases}
+		\va{E} \neq 0 \\
+		\va{B} = 0
+	\end{cases}
+	\quad \land \quad
+	\begin{cases}
+		\va{E}' = 0 \\
+		\va{B}' \neq 0
+	\end{cases}
+\end{equation}
+
+dunque per il campo elettrico
+
+\subeq{
+	\va{E}' &= \gamma \left( \va{E} + \cancel{\vas{\beta} \wedge \va{B}} \right) - \dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) \vas{\beta} \\
+	&= \gamma \va{E} - \dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) \vas{\beta}
+}
+
+\begin{equation}
+	\va{E}' = 0 %
+	\implies %
+	\va{E} = \dfrac{\gamma - 1}{\gamma \beta^{2}} (\va{E} \vdot \vas{\beta}) \vas{\beta} \propto \vas{\beta} %
+	\implies %
+	\va{E} \parallel \vas{\beta}
+\end{equation}
+
+mentre per il campo magnetico
+
+\subeq{
+	\va{B}' &= \gamma \left( \cancel{\va{B}} - \vas{\beta} \wedge \va{E} \right) - \dfrac{\gamma - 1}{\beta^{2}} \cancel{(\va{B} \vdot \vas{\beta})} \vas{\beta} \\
+	&= - \gamma \vas{\beta} \wedge \va{E}
+}
+
+\begin{equation}
+	\va{B}' \neq 0 %
+	\implies %
+	\vas{\beta} \wedge \va{E} \neq 0 %
+	\implies %
+	\lnot (\va{E} \parallel \vas{\beta})
+\end{equation}
+
+Si arriva dunque a una contraddizione, i.e. non è possibile trasformare un campo puramente elettrico in un sistema di riferimento in uno puramente magnetico in un altro sistema di riferimento.
+
+\subsection*{Onda elettromagnetica $\boldsymbol{\to}$ puramente elettrica/magnetica}
+
+Per le onde elettromagnetiche vale
+
+\begin{equation}
+	\va{E} \perp \va{B} %
+	\implies %
+	\va{E} \vdot \va{B} = 0
+\end{equation}
+
+Se imponiamo che il campo elettrico sia nullo nel sistema di riferimento primato ma non lo sia quello magnetico, otteniamo
+
+\subeq{
+	\va{E}' &= 0 \\
+	\gamma (\va{E} + \vas{\beta} \wedge \va{B}) - \dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) \vas{\beta} &= 0 \\
+	\dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) \vas{\beta} &= \gamma (\va{E} + \vas{\beta} \wedge \va{B}) \\
+	\dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) (\va{B} \vdot \vas{\beta}) &= \va{B} \vdot \gamma (\va{E} + \vas{\beta} \wedge \va{B}) \\
+	&= \gamma \left( \cancel{\va{E} \vdot \va{B}} + \cancel{\va{B} \vdot \vas{\beta} \wedge \va{B}} \right)
+}
+
+\begin{equation}
+	\dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) (\va{B} \vdot \vas{\beta}) = 0 %
+	\implies %
+	(\va{E} \perp \vas{\beta}) \land \lor (\va{B} \perp \vas{\beta})
+\end{equation}
+
+in quanto $\vas{\beta} \neq \va{0}$.
+
+\subeq{
+	\va{B}' &\neq 0 \\
+	\gamma (\va{B} - \vas{\beta} \wedge \va{E}) - \dfrac{\gamma - 1}{\beta^{2}} (\va{B} \vdot \vas{\beta}) \vas{\beta} &\neq 0 \\
+	\dfrac{\gamma - 1}{\beta^{2}} (\va{B} \vdot \vas{\beta}) \vas{\beta} &\neq \gamma (\va{B} - \vas{\beta} \wedge \va{E}) \\
+	\dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) (\va{B} \vdot \vas{\beta}) &\neq \va{E} \vdot \gamma (\va{B} - \vas{\beta} \wedge \va{E}) \\
+	&\neq \gamma \left( \cancel{\va{E} \vdot \va{B}} + \cancel{\va{E} \vdot \vas{\beta} \wedge \va{E}} \right)
+}
+
+\begin{equation}
+	\dfrac{\gamma - 1}{\beta^{2}} (\va{E} \vdot \vas{\beta}) (\va{B} \vdot \vas{\beta}) \neq 0 %
+	\implies %
+	\lnot (\va{E} \perp \vas{\beta}) \land \lnot (\va{B} \perp \vas{\beta})
+\end{equation}
+
+Il risultato è analogo ponendo nullo il campo magnetico e non nullo quello elettrico. \\
+Si arriva dunque a una contraddizione, i.e. non è possibile vedere un'onda elettromagnetica come puramente elettrica o puramente magnetica in un altro sistema di riferimento.
 
 % ==============================================================================
 
