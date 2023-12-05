@@ -543,7 +543,87 @@ Si arriva dunque a una contraddizione, i.e. non è possibile vedere un'onda elet
 
 \section{Esercizio 3}
 
-qui
+Le condizioni iniziali sono date da:
+
+\begin{equation}
+	\begin{dcases}
+		\pdv{\va{E}}{x^{\mu}} = 0 \\
+		\pdv{\va{B}}{x^{\mu}} = 0 \\
+		E < B \\
+		\va{E} \perp \va{B} %
+		\implies %
+		\va{E} \vdot \va{B} = 0
+	\end{dcases}
+\end{equation}
+
+\textit{Suggerimento: trasformazione verso un sistema di riferimento con velocità}
+
+\begin{equation}
+	\vas{\beta} = \dfrac{\va{E} \wedge \va{B}}{B^{2}} %
+	= \dfrac{E}{B} \, \vu{n}
+\end{equation}
+
+Essendo $c \vas{\beta} = \va{v}$, abbiamo che $v = c E / B$. Dalla definizione della velocità del boost abbiamo anche che $\vas{\beta} \vdot \va{E} = \vas{\beta} \vdot \va{B} = 0$. \\
+Poniamo, nel sistema di riferimento del laboratorio, campo elettrico, campo magnetico e direzione del boost in una terna ortogonale nel seguente modo:
+
+\begin{equation}
+	\begin{cases}
+		\vas{\beta} = (\beta, 0, 0) = \beta \, \vu{i} \\
+		\va{E} = (0, E, 0) = E \, \vu{j} \\
+		\va{B} = (0, 0, B) = B \, \vu{k}
+	\end{cases}
+\end{equation}
+
+Trasformando i campi, nel sistema di riferimento primato otteniamo
+
+\subeq{
+	\va{E}' &= \gamma \left( \va{E} + \vas{\beta} \wedge \va{B} \right) - \dfrac{\gamma - 1}{\beta^{2}} \left( \cancel{\va{E} \vdot \vas{\beta}} \right) \vas{\beta} \\
+	&= \gamma \left( E \, \vu{j} + \dfrac{E}{B} B \, \expl{- \vu{j}}{\vu{i} \wedge \vu{k}} \right) \\
+	&= \gamma \left( E - \dfrac{E}{B} B \right)\vu{j} \\
+	&= \va{0}
+}
+
+\subeq{
+	\va{B}' &= \gamma \left( \va{B} - \vas{\beta} \wedge \va{E} \right) - \dfrac{\gamma - 1}{\beta^{2}} \left( \cancel{\va{B} \vdot \vas{\beta}} \right) \vas{\beta} \\
+	&= \gamma \left( B \, \vu{k} - \dfrac{E}{B} E \, \expl{\vu{k}}{\vu{i} \wedge \vu{j}} \right) \\
+	&= \gamma B \left( 1 - \dfrac{E^{2}}{B^{2}} \right) \vu{k} \\
+	&= \gamma B \left( \expl{\gamma^{-2}}{1 - \beta^{2}} \right) \vu{k} \\
+	&= (\gamma^{-2} B) \, \vu{k}
+}
+
+A questo punto, nel sistema di riferimento primato si ha solo un campo magnetico, il quale fa muovere la carica in moto circolare uniforme:
+
+\begin{equation}
+	\begin{dcases}
+		x'(t) = x'_{0} + r \sin(\omega t' + \alpha) \\
+		y'(t) = y'_{0} + r \cos(\omega t' + \alpha) \\
+		z'(t) = z'_{0} + u_{0, z} t'
+	\end{dcases}
+	\qquad %
+	\begin{dcases}
+		\psi \doteq \omega t' + \alpha
+		\omega \doteq \dfrac{e c B}{\mathcal{E}} = \dfrac{e B}{m c \gamma} \\
+		r \doteq \dfrac{u_{0}^{\perp}}{\omega} = \dfrac{m c}{e B} \gamma u_{0}^{\perp} = \dfrac{m c}{e B} \gamma \sqrt{(u_{0, x})^{2} + (u_{0, y})^{2}} \\
+		\alpha \doteq \tan[-1](\dfrac{u_{0, y}}{u_{0, x}})
+	\end{dcases}
+\end{equation}
+
+dove $\va{u}'_{0}$ è la velocità iniziale della carica nel sistema di riferimento primato. \\
+Nel sistema di riferimento del laboratorio la carica si muoverà dunque con un moto composto dal moto circolare uniforme più un moto accelerato nella direzione del campo elettrico: questo risulta in un moto di forma trocoidale, dove la \textit{velocità di deriva} è data da $\vas{\beta} = (E/B) \, \vu{i}$
+
+\begin{equation}
+	x^{\mu} = %
+		\bmqty{ c t \\
+				x \\
+				y \\
+				z
+				} = %
+		\bmqty{ \gamma \left( x'_{0} + r \sin(\omega t' + \alpha) + \dfrac{E}{B} \, c t' \right) \\
+				\gamma \left( c t' + \dfrac{E}{B} (x'_{0} + r \sin(\omega t' + \alpha)) \right) \\
+				y'_{0} + r \cos(\omega t' + \alpha) \\
+				z'_{0} + u_{0, z} t'
+				}
+\end{equation}
 
 % ==============================================================================
 
